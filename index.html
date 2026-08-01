@@ -312,6 +312,114 @@
   .callouts .callout{ margin-bottom:0; }
   .callout.assist{ border-left-color: var(--bel-green); }
   .callout.assist .avatar{ color: var(--bel-green); }
+  .callout-btn{
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .callout-btn:hover{
+    box-shadow: 0 8px 22px rgba(14,42,63,0.12);
+    transform: translateY(-1px);
+  }
+  .callout-btn:active{ transform: translateY(0) scale(0.99); }
+  .callout-btn.assist{ border-left-color: var(--bel-green); }
+  .callout-btn .arrow{
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--ink-soft);
+    font-size: 18px;
+  }
+
+  /* ---------- Rank modal ---------- */
+  .rank-modal{
+    background:#fff;
+    border-radius: 14px;
+    width: min(480px, 100%);
+    max-height: min(78vh, 640px);
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    overflow: hidden;
+  }
+  .rank-modal-head{
+    padding: 22px 24px 14px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .rank-modal-head h3{
+    font-size: 19px;
+    color: var(--navy);
+  }
+  .rank-modal-head p{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .rank-list{
+    overflow-y: auto;
+    padding: 6px 10px;
+  }
+  .rank-row{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .rank-row:nth-child(odd){ background: var(--paper); }
+  .rank-row .pos{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink-soft);
+    width: 22px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .rank-row:nth-child(1) .pos{ color: var(--gold); }
+  .rank-row:nth-child(2) .pos{ color: #9AA5AB; }
+  .rank-row:nth-child(3) .pos{ color: #B08D57; }
+  .rank-row .avatar{
+    width: 34px; height: 34px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .rank-row .rname{
+    font-family:'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 13.5px;
+    color: var(--ink);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .rank-row .rstat{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .rank-row .rsub{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+    width: 64px;
+    text-align: right;
+  }
+  .rank-modal-close{
+    padding: 12px 24px 18px;
+    flex-shrink: 0;
+    text-align: right;
+    border-top: 1px solid var(--line);
+  }
   @media (max-width: 640px){
     .callouts{ grid-template-columns: 1fr; }
   }
@@ -625,19 +733,19 @@
 
     <div class="scoreboard">
       <div class="cell">
-        <div class="num">19</div>
+        <div class="num" id="sb-players">19</div>
         <div class="label">Игроков в составе</div>
       </div>
       <div class="cell">
-        <div class="num">508</div>
+        <div class="num" id="sb-goals">508</div>
         <div class="label">Голов за сезон</div>
       </div>
       <div class="cell">
-        <div class="num">476</div>
+        <div class="num" id="sb-assists">476</div>
         <div class="label">Голевых передач</div>
       </div>
       <div class="cell">
-        <div class="num">184</div>
+        <div class="num" id="sb-matches">184</div>
         <div class="label">Матчей сыграно (сумм.)</div>
       </div>
     </div>
@@ -647,20 +755,22 @@
 <main>
 
   <div class="callouts">
-    <div class="callout" id="top-scorer">
-      <div class="avatar">ДЩ</div>
+    <button class="callout callout-btn" id="btn-top-scorer" type="button">
+      <div class="avatar">⚽</div>
       <div class="txt">
-        <span class="name">Лучший бомбардир — Дима (Щ)</span>
-        <b>105 голов</b> и <b>67 передач</b> в <b>19 матчах</b>. Далее в гонке бомбардиров — Тихон (64+83) и Назар (82+51).
+        <span class="name">Рейтинг бомбардиров</span>
+        Все игроки по голам — от лучшего к худшему
       </div>
-    </div>
-    <div class="callout assist" id="top-assist">
-      <div class="avatar">Т</div>
+      <span class="arrow">→</span>
+    </button>
+    <button class="callout callout-btn assist" id="btn-top-assist" type="button">
+      <div class="avatar">🎯</div>
       <div class="txt">
-        <span class="name">Лучший ассистент — Тихон</span>
-        <b>83 передачи</b> и <b>64 гола</b> в <b>17 матчах</b>. Далее по передачам — Мотя (75) и Дима (Щ) (67).
+        <span class="name">Рейтинг ассистентов</span>
+        Все игроки по передачам — от лучшего к худшему
       </div>
-    </div>
+      <span class="arrow">→</span>
+    </button>
   </div>
 
   <div class="section-head" id="squad">
@@ -843,6 +953,19 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="rank-modal-overlay">
+  <div class="rank-modal">
+    <div class="rank-modal-head">
+      <h3 id="rank-modal-title">Рейтинг</h3>
+      <p id="rank-modal-desc"></p>
+    </div>
+    <div class="rank-list" id="rank-list"></div>
+    <div class="rank-modal-close">
+      <button class="btn btn-ghost" id="rank-modal-cancel">Закрыть</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <footer>
@@ -880,6 +1003,14 @@
   const overlay = document.getElementById('modal-overlay');
   const toastEl = document.getElementById('toast');
   const tableNote = document.getElementById('table-note');
+  const rankOverlay = document.getElementById('rank-modal-overlay');
+  const rankListEl  = document.getElementById('rank-list');
+  const rankTitleEl = document.getElementById('rank-modal-title');
+  const rankDescEl  = document.getElementById('rank-modal-desc');
+  const sbPlayers = document.getElementById('sb-players');
+  const sbGoals   = document.getElementById('sb-goals');
+  const sbAssists = document.getElementById('sb-assists');
+  const sbMatches = document.getElementById('sb-matches');
 
   let players = defaultPlayers.slice();
   let editing = false;
@@ -958,6 +1089,42 @@
     return (base.substring(0,2) || '?').toUpperCase();
   }
 
+  function openRankModal(stat){
+    const isGoals = stat === 'goals';
+    const sorted = players.slice().sort((a, b) => {
+      const primaryDiff = (Number(b[stat]) || 0) - (Number(a[stat]) || 0);
+      if(primaryDiff !== 0) return primaryDiff;
+      const otherStat = isGoals ? 'assists' : 'goals';
+      return (Number(b[otherStat]) || 0) - (Number(a[otherStat]) || 0);
+    });
+
+    rankTitleEl.textContent = isGoals ? 'Рейтинг бомбардиров' : 'Рейтинг ассистентов';
+    rankDescEl.textContent = isGoals
+      ? 'Все игроки по количеству голов — от лучшего к худшему'
+      : 'Все игроки по количеству голевых передач — от лучшего к худшему';
+
+    rankListEl.innerHTML = sorted.map((p, i) => {
+      const otherLabel = isGoals ? 'передачи' : 'голы';
+      const otherValue = isGoals ? p.assists : p.goals;
+      return `
+        <div class="rank-row">
+          <span class="pos">${i + 1}</span>
+          <div class="avatar">${esc(initials(p.name))}</div>
+          <span class="rname">${esc(p.name)}</span>
+          <span class="rsub">${esc(otherValue)} ${otherLabel}</span>
+          <span class="rstat">${esc(p[stat])}</span>
+        </div>`;
+    }).join('');
+
+    rankOverlay.classList.add('open');
+  }
+  function closeRankModal(){ rankOverlay.classList.remove('open'); }
+
+  document.getElementById('btn-top-scorer').onclick = () => openRankModal('goals');
+  document.getElementById('btn-top-assist').onclick = () => openRankModal('assists');
+  document.getElementById('rank-modal-cancel').onclick = closeRankModal;
+  rankOverlay.addEventListener('click', (e) => { if(e.target === rankOverlay) closeRankModal(); });
+
   function flagCell(){
     return '<span class="flag"></span>Беларусь';
   }
@@ -1004,6 +1171,20 @@
     table.classList.toggle('editing', editing);
   }
 
+  function renderScoreboard(){
+    const totals = players.reduce((acc, p) => {
+      acc.goals   += Number(p.goals)   || 0;
+      acc.assists += Number(p.assists) || 0;
+      acc.matches += Number(p.matches) || 0;
+      return acc;
+    }, { goals: 0, assists: 0, matches: 0 });
+
+    sbPlayers.textContent = players.length;
+    sbGoals.textContent   = totals.goals;
+    sbAssists.textContent = totals.assists;
+    sbMatches.textContent = totals.matches;
+  }
+
   function renderBody(){
     tbody.innerHTML = players.map((p,i) => editing ? editRow(p,i) : viewRow(p,i)).join('');
     if(editing){
@@ -1017,6 +1198,7 @@
     tableNote.textContent = editing
       ? 'Режим редактирования: меняйте поля и нажмите «Сохранить изменения», чтобы это увидели все посетители сайта.'
       : 'Возраст и фото игроков пока не заполнены — можно добавить позже. Рыночная стоимость условна и не отражает реальную оценку.';
+    renderScoreboard();
   }
 
   function collectFromInputs(){
