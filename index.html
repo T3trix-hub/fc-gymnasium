@@ -1475,25 +1475,30 @@
     }
     matchesListEl.innerHTML = matches.map((m, idx) => {
       const result = getResult(m.scoreUs, m.scoreThem);
-      const resultEmoji = m.scoreUs > m.scoreThem ? '✓' : m.scoreUs < m.scoreThem ? '✗' : '=';
+      const resultColor = m.scoreUs > m.scoreThem ? 'var(--bel-green)' : m.scoreUs < m.scoreThem ? 'var(--bel-red)' : 'var(--ink-soft)';
       return `
-        <div class="rank-row" style="position: relative;">
-          <div style="flex: 1;">
+        <div class="rank-row" style="position: relative; flex-direction: column; align-items: flex-start; padding: 12px;">
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-weight: 600; font-size: 13px; color: var(--ink);">Сборная 192/174</div>
             <div style="font-weight: 600; font-size: 13px; color: var(--ink);">${esc(m.opponent)}</div>
-            <div style="font-size: 11px; color: var(--ink-soft); margin-top: 2px;">${esc(m.stadium)}</div>
-            <div style="font-size: 11px; color: var(--ink-soft);">${formatDate(m.date, m.time)}</div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; margin-left: 12px;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; color: var(--navy);">
+          
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; color: var(--navy);">
               ${m.scoreUs} : ${m.scoreThem}
             </div>
-            <div style="font-size: 12px; font-weight: 600; min-width: 60px; text-align: right;">
-              <span style="color: ${m.scoreUs > m.scoreThem ? 'var(--bel-green)' : m.scoreUs < m.scoreThem ? 'var(--bel-red)' : 'var(--ink-soft)'};">
-                ${result}
-              </span>
+            <div style="font-size: 12px; font-weight: 600; color: ${resultColor};">
+              ${result}
             </div>
           </div>
-          ${editing ? `<button data-idx="${idx}" data-action="delete" style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: var(--bel-red); cursor: pointer; font-size: 14px; padding: 4px;">✕</button>` : ''}
+          
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <div style="font-size: 11px; color: var(--ink-soft);">${esc(m.stadium)}</div>
+              <div style="font-size: 11px; color: var(--ink-soft);">${formatDate(m.date, m.time)}</div>
+            </div>
+            ${editing ? `<button data-idx="${idx}" data-action="delete" style="background: none; border: none; color: var(--bel-red); cursor: pointer; font-size: 14px; padding: 4px;">✕</button>` : ''}
+          </div>
         </div>
       `;
     }).join('');
